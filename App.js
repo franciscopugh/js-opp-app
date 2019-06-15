@@ -1,3 +1,4 @@
+// Constructor de Producto
 class Product {
     constructor(name,price,cant,date){
         this.name = name;
@@ -7,6 +8,7 @@ class Product {
     }
 }
 
+//Constructor de UI
 class UI {
     addProduct(product){
        const productList = document.getElementById('product-list');
@@ -20,6 +22,7 @@ class UI {
                     <strong>Price</strong>: ${product.price}  
                     <strong>Quantity</strong>: ${product.cant} 
                     <strong>Date</strong>: ${product.date}  
+                    <a href="#" class="btn btn-danger" name="delete">Delete</a>
                 </div>
             </div>
         `;
@@ -30,17 +33,32 @@ class UI {
         document.getElementById('product-form').reset();
     }
 
-    deleteProduct(){
-
+    deleteProduct(element){
+        if(element.name === 'delete'){     // Click en el boton Delete
+            element.parentElement.parentElement.parentElement.remove()      // Selecciono toda la tarjeta y la elimino
+            this.showMessage('Producto Eliminado Satisfactoriamente', 'success');
+        }
     }
 
-    editProduct(){
+    showMessage(message,cssClass){
+        const div = document.createElement('div');
+        div.className = `alert alert-${cssClass} mt-2`;
+        div.appendChild(document.createTextNode(message));
 
+        // Mostrar en el DOM
+        const container = document.querySelector('.container');
+        const app = document.querySelector('#App');
+
+        // Insertar Mensaje en la UI
+        container.insertBefore(div, app);
+
+        // Remover el mensaje pasado 3 segundos
+        setTimeout(function () {
+            document.querySelector('.alert').remove();
+        }, 3000);
     }
 
-    showMessage(){
-
-    }
+    
 }
 
 // Eventos del DOM
@@ -53,12 +71,20 @@ document.getElementById('product-form').addEventListener('submit', function (eve
 
   const product = new Product(name,price,cant,date);
 
-  //Instancio la Clase 
+  const ui = new UI();    //Instancio la Clase 
 
-  const ui = new UI();
+  if(name === '' || price === '' || cant === '' || date === ''){
+        return ui.showMessage('Complete todos los campos requeridos', 'danger'); 
+  }
 
   ui.addProduct(product);       
+  ui.showMessage('Producto Agregado satisfactoriamente', 'success');
   ui.resetForm();
 
   event.preventDefault();
+});
+
+document.getElementById('product-list').addEventListener('click', function(event){
+    const ui = new UI();
+    ui.deleteProduct(event.target);
 });
