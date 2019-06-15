@@ -8,8 +8,26 @@ class Product {
 }
 
 class UI {
-    addProduct(){
-       
+    addProduct(product){
+       const productList = document.getElementById('product-list');
+       const element = document.createElement('div');
+
+       // Inserto HTML en el elemento 
+       element.innerHTML = `
+            <div class="card text-center mb-4">
+                <div class="card-body">
+                    <strong>Product</strong>: ${product.name} 
+                    <strong>Price</strong>: ${product.price}  
+                    <strong>Quantity</strong>: ${product.cant} 
+                    <strong>Date</strong>: ${product.date}  
+                </div>
+            </div>
+        `;
+       productList.appendChild(element);
+    }
+
+    resetForm(){
+        document.getElementById('product-form').reset();
     }
 
     deleteProduct(){
@@ -32,10 +50,15 @@ document.getElementById('product-form').addEventListener('submit', function (eve
   const price = document.getElementById('price').value;
   const cant = document.getElementById('cant').value;
   const date = document.getElementById('date').value;
-  
-  console.log(name,price,cant,date);
 
-  console.log(new Product(name,price,cant,date))
+  const product = new Product(name,price,cant,date);
+
+  //Instancio la Clase 
+
+  const ui = new UI();
+
+  ui.addProduct(product);       
+  ui.resetForm();
 
   event.preventDefault();
 });
